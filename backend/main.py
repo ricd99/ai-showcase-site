@@ -16,7 +16,7 @@ class Projects(BaseModel):
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"  # endpoint (url) of frontend server
+    "http://localhost:5173"  # endpoint (url) of frontend server
 ]
 
 app.add_middleware(
