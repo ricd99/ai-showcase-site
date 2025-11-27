@@ -15,6 +15,7 @@ class Projects(BaseModel):
 
 app = FastAPI()
 
+
 origins = [
     "http://localhost:5173"  # endpoint (url) of frontend server
 ]
