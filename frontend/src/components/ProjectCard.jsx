@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Projectcard = ({ project }) => {
+const ProjectCard = ({ project }) => {
   return (
-    <Link to={`/projects/${project.id}`}>
+    <Link to={`/project/${project.id}`}>
       <div className="bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden transition-shadow duration-300 cursor-pointer">
         <img
           src={project.image_url}
@@ -18,3 +18,4 @@ const Projectcard = ({ project }) => {
     </Link>
   );
 };
+ export default ProjectCard

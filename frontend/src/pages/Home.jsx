@@ -1,6 +1,7 @@
 import React from "react";
+import ProjectGrid from "../components/ProjectGrid.jsx";
 
-const ProjectGrid = () => {
+const Home = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <header className="bg-blue-600 py-8 text-white">
@@ -13,14 +14,15 @@ const ProjectGrid = () => {
         </p>
         <p className="mb-4 text-lg">
           Each cell below is one lecture from the series. Within each cell is
-          the project from that lecture, as well as side projeects I've done
+          the project from that lecture, as well as side projects I've done
           related to that lecture's topic.
         </p>
       </div>
-      <main>
+          <main>
+              <ProjectGrid />
       </main>
     </div>
   );
 };
 
-export default ProjectGrid;
+export default Home;
