@@ -4,15 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 
-
-class Project(BaseModel):
-    name: str
-
-
-class Projects(BaseModel):
-    projects: List[Project]
-
-
 app = FastAPI()
 
 
@@ -28,18 +19,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-memory_db = {"projects": []}
+projects = [
+    {
+        "id": 1,
+        "title": "Micrograd",
+        "short_description": "A tiny autograd engine",
+        "detailed_description": "Full implementation of backpropagation...",
+        "image_url": "https://via.placeholder.com/400x300?text=Micrograd",
+        "tech_stack": ["Python", "NumPy"],
+    },
+    {
+        "id": 2,
+        "title": "Makemore",
+        "short_description": "Character-level language model",
+        "detailed_description": "Building language models from scratch...",
+        "image_url": "https://via.placeholder.com/400x300?text=Makemore",
+        "tech_stack": ["Python", "PyTorch"],
+    },
+]
 
 
-@app.get("/projects", response_model=Projects)
+@app.get("/")
+def root():
+    return {"message": "AI Projects API"}
+
+
+@app.get("/api/projects")
 def get_projects():
-    return Projects(projects=memory_db["projects"])
+    return projects
 
 
-@app.post("/projects", response_model=Project)
-def add_project(project: Project):
-    memory_db["projects"].append(project)
-    return project
+@app.get("/api/projects/{project_id}")
+def add_project(project_id: int):
+    project = next((p for p in projects if p["id"] == project_id), None)
+    if project:
+        return project
+    return {"error": "Project not found"}
 
 
 if __name__ == "__main__":

@@ -18,8 +18,10 @@ const Home = () => {
           related to that lecture's topic.
         </p>
       </div>
-          <main>
-              <ProjectGrid />
+      <main>
+        <div className="px-20">
+          <ProjectGrid />
+        </div>
       </main>
     </div>
   );
