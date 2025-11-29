@@ -1,8 +1,13 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from sqlalchemy.orm import Session
 from typing import List
+
+from database import SessionLocal, engine, Base
+from models import Project
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -19,24 +24,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-projects = [
-    {
-        "id": 1,
-        "title": "Micrograd",
-        "short_description": "A tiny autograd engine",
-        "detailed_description": "Full implementation of backpropagation...",
-        "image_url": "https://via.placeholder.com/400x300?text=Micrograd",
-        "tech_stack": ["Python", "NumPy"],
-    },
-    {
-        "id": 2,
-        "title": "Makemore",
-        "short_description": "Character-level language model",
-        "detailed_description": "Building language models from scratch...",
-        "image_url": "https://via.placeholder.com/400x300?text=Makemore",
-        "tech_stack": ["Python", "PyTorch"],
-    },
-]
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @app.get("/")
@@ -45,17 +39,37 @@ def root():
 
 
 @app.get("/api/projects")
-def get_projects():
-    return projects
+def get_projects(db: Session = Depends(get_db)):
+    projects = db.query(Project).all()
+    return [
+        {
+            "id": p.id,
+            "title": p.title,
+            "short_description": p.short_description,
+            "detailed_description": p.detailed_description,
+            "image_url": p.image_url,
+            "tech_stack": p.tech_stack,
+        }
+        for p in projects
+    ]
 
 
 @app.get("/api/projects/{project_id}")
-def add_project(project_id: int):
-    project = next((p for p in projects if p["id"] == project_id), None)
+def add_project(project_id: int, db: Session = Depends(get_db)):
+    project = db.query(Project).filter(Project.id == project_id).first()
     if project:
-        return project
-    return {"error": "Project not found"}
+        return {
+            "id": project.id,
+            "title": project.title,
+            "short_description": project.short_description,
+            "detailed_description": project.detailed_description,
+            "image_url": project.image_url,
+            "tech_stack": project.tech_stack,
+        }
+    raise HTTPException(status_code=404, detail="Project not found")
 
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# or uvicorn main:app --reload
