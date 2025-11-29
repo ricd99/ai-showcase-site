@@ -1,0 +1,32 @@
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+backend/__pycache__/
+
+# Node/Frontend
+node_modules/
+dist/
+.vite/
+frontend/node_modules/
+frontend/dist/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
